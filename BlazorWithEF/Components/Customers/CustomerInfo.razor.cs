@@ -8,18 +8,17 @@ public partial class CustomerInfo
     private bool hover { get; set; } = true;
     private bool dense { get; set; } = false;
     private string searchSting { get; set; } = string.Empty;
-    private Customer customer = new Customer();
-    private List<Customer> customers = new List<Customer>();
+    private Customer customer { get; set; } = new();
+    private List<Customer> CustomerList { get; set; } = new();
 
     protected override async Task OnInitializedAsync()
     {
-        GetAllCustomer();
+        CustomerList = await GetAllCustomer();
     }
 
-    private List<Customer> GetAllCustomer()
+    private async Task<List<Customer>> GetAllCustomer()
     {
-        customers = _customerService.GetCustomers();
-        return customers;
+        return await _customerService.GetCustomers();
     }
 
     private bool Search(Customer customer)
@@ -37,23 +36,23 @@ public partial class CustomerInfo
         }
     }
 
-    private void Save()
+    private async Task Save()
     {
-        _customerService.SaveCustomer(customer);
+        await _customerService.SaveCustomer(customer);
         customer = new Customer();
         snackBar.Add("Customer Save Successfully", Severity.Success);
-        GetAllCustomer();
+        await GetAllCustomer();
     }
 
     private void Edit(int id)
     {
-        customer = customers.FirstOrDefault(c => c.Id == id);
+        customer = CustomerList.FirstOrDefault(c => c.Id == id);
     }
 
-    private void Delete(int id)
+    private async Task Delete(int id)
     {
-        _customerService.DeleteCustomer(id);
+        await _customerService.DeleteCustomer(id);
         snackBar.Add("Customer Delete Successfully", Severity.Success);
-        GetAllCustomer();
+        await GetAllCustomer();
     }
 }

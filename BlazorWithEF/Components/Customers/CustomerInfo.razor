@@ -21,7 +21,7 @@
 </MudCard>
 <br \>
 
-<MudTable Elevation="10" Items="GetAllCustomer()" Filter="new Func<Customer,bool>(Search)" @bind-customer="customer" Hover="@hover" Dense="@dense">
+<MudTable Elevation="10" Items="CustomerList" T="Customer" Filter="new Func<Customer,bool>(Search)" @bind-customer="customer" Hover="@hover" Dense="@dense">
 	<ToolBarContent>
 		<MudText Typo="Typo.h6">
 			Customer
@@ -65,7 +65,7 @@
 		</MudTd>
 	</RowTemplate>
 	<PagerContent>
-		<MudTablePager PageSizeOptions="new int[]{5,10,20,50,100}" />
+		<MudTablePager PageSizeOptions="new int[]{10,20,50,100,int.MaxValue}" />
 	</PagerContent>
 </MudTable>
 

@@ -2,31 +2,31 @@
 
 public class CustomerService(ApplicationContext _context) : ICustomerService
 {
-    public void DeleteCustomer(int id)
+    public async Task DeleteCustomer(int id)
     {
-        var customer = _context.Customers.FirstOrDefault(x => x.Id == id);
+        var customer = await _context.Customers.FirstOrDefaultAsync(x => x.Id == id);
         if (customer != null)
         {
             _context.Customers.Remove(customer);
-            _context.SaveChanges();
+            await _context.SaveChangesAsync();
         }
     }
 
-    public Customer GetCustomerById(int id)
+    public async Task<Customer> GetCustomerById(int id)
     {
-        var customer = _context.Customers.SingleOrDefault(x => x.Id == id);
+        var customer = await _context.Customers.SingleOrDefaultAsync(x => x.Id == id);
         return customer;
     }
 
-    public List<Customer> GetCustomers()
+    public async Task<List<Customer>> GetCustomers()
     {
-        return _context.Customers.ToList();
+        return await _context.Customers.ToListAsync();
     }
 
-    public void SaveCustomer(Customer customer)
+    public async Task SaveCustomer(Customer customer)
     {
-        if (customer.Id == 0) _context.Customers.Add(customer);
+        if (customer.Id == 0) await _context.Customers.AddAsync(customer);
         else _context.Customers.Update(customer);
-        _context.SaveChanges();
+        await _context.SaveChangesAsync();
     }
 }

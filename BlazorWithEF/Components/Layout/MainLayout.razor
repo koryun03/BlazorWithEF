@@ -1,11 +1,8 @@
 ﻿@inherits LayoutComponentBase
 
-<MudThemeProvider/>
-<MudPopoverProvider/>
-<MudDialogProvider/>
-<MudSnackbarProvider/>
 
-<div class="page">
+
+@* <div class="page">
     <div class="sidebar">
         <NavMenu />
     </div>
@@ -26,3 +23,38 @@
     <a href="" class="reload">Reload</a>
     <a class="dismiss">🗙</a>
 </div>
+ *@
+
+
+
+
+<PageTitle>BlazorWithEF</PageTitle>
+
+<MudThemeProvider @bind-IsDarkMode="IsDarkMode" Theme="Theme"/>
+<MudPopoverProvider />
+<MudDialogProvider />
+<MudSnackbarProvider />
+
+ <MudLayout>
+     <div class="page">
+         <MudAppBar eElevation="1" Dense="@Dense">
+             <MudIconButton Icon="@Icons.Material.Filled.Menu" Color="Color.Inherit" Edge="Edge.Start" OnClick="@DrawerToggle"/>
+             <MudSpacer/>
+             <MudIconButton Icon="@Icon" Color="Color.Inherit" Edge="Edge.Start" OnClick="@ToggleTheme"/>
+             <MudAvatar Color="Color.Primary">@VisibleLogin</MudAvatar>
+         </MudAppBar>
+       
+         <MudDrawer @bind-Open="@DrawerOpen" Fixed="true" Elevation="2" Variant="@DrawerVariant.Mini" OpenMiniOnHover="false" Overlay="false" ClipMode="ClipMode" Breakpoint="@Breakpoint">
+             <NavMenu/>
+         </MudDrawer>
+          
+         <MudMainContent>
+             <MudContainer MaxWidth="MaxWidth.ExtraExtraLarge">
+                 <ErrorBoundary>
+                     @Body
+                 </ErrorBoundary>
+             </MudContainer>
+         </MudMainContent>
+
+     </div>
+ </MudLayout>
