@@ -1,4 +1,6 @@
-﻿namespace BlazorWithEF.Components.Customers;
+﻿using BlazorWithEF.Components.Customers.Dialog;
+
+namespace BlazorWithEF.Components.Customers;
 
 public partial class CustomerInfo
 {
@@ -36,7 +38,7 @@ public partial class CustomerInfo
         }
     }
 
-    private async Task Save()
+    private async Task SaveAsync()
     {
         await _customerService.SaveCustomer(customer);
         customer = new Customer();
@@ -44,15 +46,90 @@ public partial class CustomerInfo
         await GetAllCustomer();
     }
 
-    private void Edit(int id)
+    private async void EditAsync(Customer customer)
     {
-        customer = CustomerList.FirstOrDefault(c => c.Id == id);
+        var parameters = new DialogParameters<CustomerDialog>
+        {
+            {"typeDialog",2},
+            {"Customer",customer}
+        };
+
+        //var dialog = await DialogService.ShowAsync<CustomerDialog>(
+        //  "customeri datai popoxutyun",
+        //  parameters: parameters,
+        //  new DialogOptions()
+        //  {
+        //      CloseButton = true,
+        //      MaxWidth = MaxWidth.Small,
+        //      FullWidth = true,
+        //  });
+        //var res = await z.Result;
+
+        var dialog = new DialogService();
+
+        var z = await dialog.ShowAsync<CustomerDialog>(
+            "customeri datai popoxutyun",
+            parameters: parameters,
+            new DialogOptions()
+            {
+                CloseButton = true,
+                MaxWidth = MaxWidth.Small,
+                FullWidth = true,
+            });
+
+        var res = await z.Result;
+
+        if (res.Canceled)
+        {
+            return;
+        }
+
+        await GetAllCustomer();
     }
 
-    private async Task Delete(int id)
+    private async Task DeleteAsync(int id)
     {
         await _customerService.DeleteCustomer(id);
         snackBar.Add("Customer Delete Successfully", Severity.Success);
+        await GetAllCustomer();
+    }
+
+    private async Task ButtonAddClickAsync()
+    {
+        var parameters = new DialogParameters<CustomerDialog>
+        {
+            {"typeDialog",1},
+        };
+
+        //var dialog = await DialogService.ShowAsync<CustomerDialog>(
+        //  "customeri datai popoxutyun",
+        //  parameters: parameters,
+        //  new DialogOptions()
+        //  {
+        //      CloseButton = true,
+        //      MaxWidth = MaxWidth.Small,
+        //      FullWidth = true,
+        //  });
+        //var res = await z.Result;
+
+        var dialog = new DialogService();
+        var z = await dialog.ShowAsync<CustomerDialog>(
+            "customeri avelacum",
+            parameters: parameters,
+            new DialogOptions()
+            {
+                CloseButton = true,
+                MaxWidth = MaxWidth.Small,
+                FullWidth = true,
+            });
+
+        var res = await z.Result;
+
+        if (res.Canceled)
+        {
+            return;
+        }
+
         await GetAllCustomer();
     }
 }
