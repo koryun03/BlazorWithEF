@@ -2,6 +2,12 @@
 
 public class CustomerService(ApplicationContext _context) : ICustomerService
 {
+    public async Task AddCustomer(Customer customer)
+    {
+        await _context.Customers.AddAsync(customer);
+        await _context.SaveChangesAsync();
+    }
+
     public async Task DeleteCustomer(int id)
     {
         var customer = await _context.Customers.FirstOrDefaultAsync(x => x.Id == id);
@@ -25,8 +31,9 @@ public class CustomerService(ApplicationContext _context) : ICustomerService
 
     public async Task SaveCustomer(Customer customer)
     {
-        if (customer.Id == 0) await _context.Customers.AddAsync(customer);
-        else _context.Customers.Update(customer);
+        //if (customer.Id == 0) await _context.Customers.AddAsync(customer);
+        /*else*/
+        _context.Customers.Update(customer);
         await _context.SaveChangesAsync();
     }
 }

@@ -23,12 +23,13 @@
 
 <MudTable Elevation="10" Items="CustomerList" T="Customer" Filter="new Func<Customer,bool>(Search)" @bind-customer="customer" Hover="@hover" Dense="@dense">
 	<ToolBarContent>
-		<MudText Typo="Typo.h6">
+		@* <MudText Typo="Typo.h6">
 			Customer
-		</MudText>
-		<MudSpacer />
+		</MudText> 
+		<MudSpacer />*@
 
 		<MudTextField @bind-Value="searchSting" Placeholder="Search Customer..." Adornment="Adornment.Start" AdornmentIcon="@Icons.Material.Filled.Search" IconSize="Size.Medium" Class="mt-0"></MudTextField>
+		<MudSpacer/>
 		<MudButton Variant="Variant.Filled" DropShadow="false" Color="Color.Success" OnClick="ButtonAddClickAsync">Avelcnel</MudButton>
 
 	</ToolBarContent>
@@ -60,7 +61,8 @@
 			@* <MudFab @onclick="@(()=>Edit(context.Id))" Color="Color.Primary" Icon="@Icons.Material.Filled.Edit" Size="Size.Small" IconSize="Size.Small"></MudFab>
 			<MudFab @onclick="@(()=>Delete(context.Id))" Color="Color.Primary" Icon="@Icons.Material.Filled.Delete" Size="Size.Small" IconSize="Size.Small"></MudFab> *@
 
-			<MudIconButton @onclick="@(()=>EditAsync(context.Id))" Color="Color.Primary" Icon="@Icons.Material.Filled.Edit" Size="Size.Small" IconSize="Size.Small"></MudIconButton>
+			@* <MudIconButton @onclick="@(()=>EditAsync(context.Id))" Color="Color.Primary" Icon="@Icons.Material.Filled.Edit" Size="Size.Small" IconSize="Size.Small"></MudIconButton> *@
+			<MudIconButton @onclick="@(()=>EditAsync(context))" Color="Color.Primary" Icon="@Icons.Material.Filled.Edit" Size="Size.Small" IconSize="Size.Small"></MudIconButton>
 			<MudIconButton @onclick="@(()=>DeleteAsync(context.Id))" Color="Color.Primary" Icon="@Icons.Material.Filled.Delete" Size="Size.Small" IconSize="Size.Small"></MudIconButton>
 
 		</MudTd>

@@ -1,11 +1,10 @@
-﻿using BlazorWithEF.Components.Customers.Dialog;
-
-namespace BlazorWithEF.Components.Customers;
+﻿namespace BlazorWithEF.Components.Customers;
 
 public partial class CustomerInfo
 {
     //[Inject] BlazorWithEF.Data;
     [Inject] public ICustomerService _customerService { get; set; }
+    [Inject] public IDialogService _dialogService { get; set; }  // ??????
     [Inject] public ISnackbar snackBar { get; set; }
     private bool hover { get; set; } = true;
     private bool dense { get; set; } = false;
@@ -16,6 +15,7 @@ public partial class CustomerInfo
     protected override async Task OnInitializedAsync()
     {
         CustomerList = await GetAllCustomer();
+        StateHasChanged();   ///////?????
     }
 
     private async Task<List<Customer>> GetAllCustomer()
@@ -38,22 +38,15 @@ public partial class CustomerInfo
         }
     }
 
-    private async Task SaveAsync()
-    {
-        await _customerService.SaveCustomer(customer);
-        customer = new Customer();
-        snackBar.Add("Customer Save Successfully", Severity.Success);
-        await GetAllCustomer();
-    }
-
     private async void EditAsync(Customer customer)
     {
         var parameters = new DialogParameters<CustomerDialog>
         {
             {"typeDialog",2},
-            {"Customer",customer}
+            {"CustomerInput",customer}
         };
 
+        ////nayel
         //var dialog = await DialogService.ShowAsync<CustomerDialog>(
         //  "customeri datai popoxutyun",
         //  parameters: parameters,
@@ -65,17 +58,15 @@ public partial class CustomerInfo
         //  });
         //var res = await z.Result;
 
-        var dialog = new DialogService();
-
-        var z = await dialog.ShowAsync<CustomerDialog>(
-            "customeri datai popoxutyun",
-            parameters: parameters,
-            new DialogOptions()
-            {
-                CloseButton = true,
-                MaxWidth = MaxWidth.Small,
-                FullWidth = true,
-            });
+        var z = await _dialogService.ShowAsync<CustomerDialog>(
+          "customeri datai popoxutyun",
+          parameters: parameters,
+          new DialogOptions()
+          {
+              CloseButton = true,
+              MaxWidth = MaxWidth.Small,
+              FullWidth = true,
+          });
 
         var res = await z.Result;
 
@@ -84,14 +75,16 @@ public partial class CustomerInfo
             return;
         }
 
-        await GetAllCustomer();
+        //await GetAllCustomer();
+        await OnInitializedAsync();
     }
 
     private async Task DeleteAsync(int id)
     {
         await _customerService.DeleteCustomer(id);
         snackBar.Add("Customer Delete Successfully", Severity.Success);
-        await GetAllCustomer();
+        //await GetAllCustomer();
+        await OnInitializedAsync();
     }
 
     private async Task ButtonAddClickAsync()
@@ -101,6 +94,7 @@ public partial class CustomerInfo
             {"typeDialog",1},
         };
 
+        ////nayel
         //var dialog = await DialogService.ShowAsync<CustomerDialog>(
         //  "customeri datai popoxutyun",
         //  parameters: parameters,
@@ -112,8 +106,8 @@ public partial class CustomerInfo
         //  });
         //var res = await z.Result;
 
-        var dialog = new DialogService();
-        var z = await dialog.ShowAsync<CustomerDialog>(
+
+        var z = await _dialogService.ShowAsync<CustomerDialog>(
             "customeri avelacum",
             parameters: parameters,
             new DialogOptions()
@@ -130,6 +124,7 @@ public partial class CustomerInfo
             return;
         }
 
-        await GetAllCustomer();
+        //await GetAllCustomer();
+        await OnInitializedAsync();
     }
 }
