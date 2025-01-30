@@ -62,8 +62,12 @@
 		<MudTd DataLabel="LastName">@context.LastName</MudTd>
 		<MudTd DataLabel="PhoneNumber">@context.PhoneNumber</MudTd>
 		<MudTd>
-			<MudFab @onclick="@(()=>Edit(context.Id))" Color="Color.Primary" Icon="@Icons.Material.Filled.Edit" Size="Size.Small" IconSize="Size.Small"></MudFab>
-			<MudFab @onclick="@(()=>Delete(context.Id))" Color="Color.Primary" Icon="@Icons.Material.Filled.Delete" Size="Size.Small" IconSize="Size.Small"></MudFab>
+			@* <MudFab @onclick="@(()=>Edit(context.Id))" Color="Color.Primary" Icon="@Icons.Material.Filled.Edit" Size="Size.Small" IconSize="Size.Small"></MudFab>
+			<MudFab @onclick="@(()=>Delete(context.Id))" Color="Color.Primary" Icon="@Icons.Material.Filled.Delete" Size="Size.Small" IconSize="Size.Small"></MudFab> *@
+		
+			<MudIconButton @onclick="@(()=>Edit(context.Id))" Color="Color.Primary" Icon="@Icons.Material.Filled.Edit" Size="Size.Small" IconSize="Size.Small"></MudIconButton>
+			<MudIconButton @onclick="@(()=>Delete(context.Id))" Color="Color.Primary" Icon="@Icons.Material.Filled.Delete" Size="Size.Small" IconSize="Size.Small"></MudIconButton>
+		
 		</MudTd>
 	</RowTemplate>
 	<PagerContent>
@@ -71,8 +75,11 @@
 	</PagerContent>
 </MudTable>
 
-<MudSwitch @bind-Value="@hover" Color="Color.Primary">Hover</MudSwitch>
-<MudSwitch @bind-Value="@dense" Color="Color.Secondary">Dense</MudSwitch>
+<div class="d-flex flex-wrap mt-4">
+	<MudSwitch @bind-Value="@hover" Color="Color.Primary">Hover</MudSwitch>
+	<MudSwitch @bind-Value="@dense" Color="Color.Secondary">Dense</MudSwitch>
+</div>
+
 @code {
 	private bool hover{ get; set; } = true;
 	private bool dense { get; set; } = false;
