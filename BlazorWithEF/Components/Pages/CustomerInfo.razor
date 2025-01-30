@@ -1,0 +1,128 @@
+﻿@page "/customer"
+@using BlazorWithEF.Data
+@inject ICustomerService _customerService;
+@inject MudBlazor.ISnackbar snackBar
+
+<h3>CustomerInfo</h3>
+
+<MudCard Elevation="10">
+	<MudGrid>
+		<MudItem xs="4">  
+			<MudCardHeader>
+				<CardHeaderContent>
+					<MudText Typo="Typo.h6">
+						Add / Edit
+					</MudText>
+				</CardHeaderContent>
+			</MudCardHeader>
+			<MudCardContent>
+				<MudTextField @bind-Value="customer.FirstName" Label="First Name" Variant="Variant.Filled" Margin="Margin.Normal"></MudTextField>
+				<MudTextField @bind-Value="customer.LastName" Label="Last Name" Variant="Variant.Filled" Margin="Margin.Normal"></MudTextField>
+				<MudTextField @bind-Value="customer.PhoneNumber" Label="Phone number" Variant="Variant.Filled" Margin="Margin.Normal"></MudTextField>
+				<br \>
+				<MudButton Variant="Variant.Filled" OnClick="Save">Save</MudButton>
+			</MudCardContent>
+		</MudItem>
+	</MudGrid>
+</MudCard>
+<br \>
+
+<MudTable Elevation="10" Items="GetAllCustomer()" Filter="new Func<Customer,bool>(Search)" @bind-customer="customer" Hover="@hover" Dense="@dense">
+	<ToolBarContent>
+		<MudText Typo="Typo.h6">
+			Customer
+		</MudText>
+		<MudSpacer/>
+		<MudTextField @bind-Value="searchSting" Placeholder="Search Customer..." Adornment="Adornment.Start" AdornmentIcon="@Icons.Material.Filled.Search" IconSize="Size.Medium" Class="mt-0" >
+
+		</MudTextField>
+	</ToolBarContent>
+	<HeaderContent>
+		<MudTh>Id</MudTh>
+
+		<MudTh>
+			<MudTableSortLabel SortBy="new Func<Customer,object>(x=>x.FirstName)" InitialDirection="SortDirection.Ascending">FirstName</MudTableSortLabel>
+		</MudTh>	
+
+		<MudTh>
+			<MudTableSortLabel SortBy="new Func<Customer,object>(x=>x.LastName)">Last Name</MudTableSortLabel>
+		</MudTh>
+
+		<MudTh>
+			<MudTableSortLabel SortBy="new Func<Customer,object>(x=>x.PhoneNumber)">Phone Number</MudTableSortLabel>
+		</MudTh>
+
+		<MudTh>
+			Action
+		</MudTh>
+	</HeaderContent>
+	<RowTemplate>
+		<MudTd DataLabel="Id">@context.Id</MudTd>
+		<MudTd DataLabel="FirstName">@context.FirstName</MudTd>
+		<MudTd DataLabel="LastName">@context.LastName</MudTd>
+		<MudTd DataLabel="PhoneNumber">@context.PhoneNumber</MudTd>
+		<MudTd>
+			<MudFab @onclick="@(()=>Edit(context.Id))" Color="Color.Primary" Icon="@Icons.Material.Filled.Edit" Size="Size.Small" IconSize="Size.Small"></MudFab>
+			<MudFab @onclick="@(()=>Delete(context.Id))" Color="Color.Primary" Icon="@Icons.Material.Filled.Delete" Size="Size.Small" IconSize="Size.Small"></MudFab>
+		</MudTd>
+	</RowTemplate>
+	<PagerContent>
+		<MudTablePager PageSizeOptions="new int[]{5,10,20,50,100}"/>
+	</PagerContent>
+</MudTable>
+
+<MudSwitch @bind-Value="@hover" Color="Color.Primary">Hover</MudSwitch>
+<MudSwitch @bind-Value="@dense" Color="Color.Secondary">Dense</MudSwitch>
+@code {
+	private bool hover{ get; set; } = true;
+	private bool dense { get; set; } = false;
+	private string searchSting { get; set; } = string.Empty;
+	private Customer customer = new Customer();
+	private List<Customer> customers = new List<Customer>();
+
+	protected override async Task OnInitializedAsync()
+	{
+		GetAllCustomer();
+	}
+
+	private List<Customer> GetAllCustomer()
+	{
+		customers = _customerService.GetCustomers();
+		return customers;
+	}
+
+	private bool Search(Customer customer)
+	{
+		if (customer.FirstName!=null && customer.LastName!=null && customer.PhoneNumber!=null && 
+			(customer.FirstName.Contains(searchSting, StringComparison.OrdinalIgnoreCase)) ||
+			 customer.LastName.Contains(searchSting, StringComparison.OrdinalIgnoreCase) ||
+			 customer.PhoneNumber.Contains(searchSting, StringComparison.OrdinalIgnoreCase))
+		{
+			return true;
+		}
+		else
+		{
+			return false;
+		}
+	}
+
+	private void Save()
+	{
+		_customerService.SaveCustomer(customer);
+		customer = new Customer();
+		snackBar.Add("Customer Save Successfully",Severity.Success);
+		GetAllCustomer();
+	}
+
+	private void Edit(int id)
+	{
+		customer = customers.FirstOrDefault(c => c.Id == id);
+	}
+
+	private void Delete(int id)
+	{
+		_customerService.DeleteCustomer(id);
+		snackBar.Add("Customer Delete Successfully", Severity.Success);
+		GetAllCustomer();
+	}
+}
