@@ -35,10 +35,24 @@ public partial class CustomerDialog
         MudDialog.Close(DialogResult.Ok(true));
     }
 
+    //private async Task AddCustomerAsync(Customer customer)
+    //{
+    //    await _customerService.AddCustomer(customer);
+    //    Snackbar.Add("Customery poxvav", Severity.Success);
+    //    //await GetAllCustomer();
+    //}
+
     private async Task AddCustomerAsync(Customer customer)
     {
-        await _customerService.AddCustomer(customer);
-        Snackbar.Add("Customery poxvav", Severity.Success);
+        var result = await _customerService.AddCustomer(customer);
+        if (result.Success)
+        {
+            Snackbar.Add(result.Message, Severity.Success);
+        }
+        else
+        {
+            Snackbar.Add(result.Message, Severity.Error);
+        }
         //await GetAllCustomer();
     }
 
